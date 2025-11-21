@@ -9,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -27,7 +26,18 @@ public class ChatController {
     }
 
     /**
-     * Endpoint de teste — diagnóstico rápido.
+     * 🔹 Endpoint de diagnóstico para o frontend
+     */
+    @GetMapping("/ping")
+    public Map<String, String> ping() {
+        return Map.of(
+                "status", "OK",
+                "message", "Backend está ativo e recebendo requisições!"
+        );
+    }
+
+    /**
+     * 🧪 Endpoint de teste — seu endpoint atual
      */
     @GetMapping("/test")
     public Map<String, String> test() {
@@ -35,7 +45,7 @@ public class ChatController {
     }
 
     /**
-     * Endpoint tradicional — resposta completa (sem streaming).
+     * 🤖 Endpoint tradicional — resposta completa (sem streaming).
      */
     @PostMapping
     public Mono<ChatResponse> chat(@RequestBody ChatRequest request) {
@@ -61,7 +71,7 @@ public class ChatController {
     }
 
     /**
-     * Endpoint streaming — resposta token a token.
+     * 📡 Endpoint streaming — resposta token a token.
      */
     @PostMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> streamChat(@RequestBody ChatRequest request) {
@@ -71,7 +81,7 @@ public class ChatController {
     }
 
     /**
-     * Extrai o texto principal retornado pelo Ollama.
+     * 🔍 Extrai texto retornado pelo Ollama.
      */
     private String extrairResposta(Map<String, Object> responseMap) {
         if (responseMap == null) return "⚠️ Resposta vazia do Ollama.";

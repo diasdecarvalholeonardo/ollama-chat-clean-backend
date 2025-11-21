@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "ollama.api.url",
+  "type": "java.lang.String",
+  "description": "A description for 'ollama.api.url'"
+}]}

@@ -1,19 +1,21 @@
 package com.leo.ai.ollamachat.dto;
 
 public class ChatResponse {
-    private String response;
+
+    private String reply;
 
     public ChatResponse() {}
 
-    public ChatResponse(String response) {
-        this.response = response;
+    public ChatResponse(String reply) {
+        this.reply = reply;
     }
 
-    public String getResponse() {
-        return response;
+    public String getReply() {
+        return reply;
     }
 
-    public void setResponse(String response) {
-        this.response = response;
+    public void setReply(String reply) {
+        this.reply = reply;
     }
 }
+
