@@ -1,19 +1,21 @@
-Write-Host "============================================"
-Write-Host "        Encerrando Backend + Frontend       "
-Write-Host "============================================"
+# ARQUIVO: stop-all.ps1
+# Script para Windows PowerShell para parar a arquitetura Docker Compose
 
-# --- ENCERRAR BACKEND (Java / Spring Boot) ---
-Write-Host "Finalizando processos JAVA (Spring Boot)..."
-Get-Process -Name java -ErrorAction SilentlyContinue | Stop-Process -Force
+Write-Host "========================================================="
+Write-Host "  PARANDO E REMOVENDO TODOS OS SERVIÇOS DOCKER"
+Write-Host "========================================================="
 
-# --- ENCERRAR FRONTEND (Node / Vite) ---
-Write-Host "Finalizando processos NODE (Vite)..."
-Get-Process -Name node -ErrorAction SilentlyContinue | Stop-Process -Force
+# Comando para parar e remover os contêineres, volumes e a rede
+# down: para e remove os containers
+# -v: remove os volumes nomeados (garante limpeza, se usados)
+$dockerCommand = "docker-compose down -v"
 
-# --- ENCERRAR Janelas CMD abertas pelo start-all ---
-Write-Host "Fechando janelas CMD iniciadas pelo start-all..."
-Get-Process -Name cmd -ErrorAction SilentlyContinue | Stop-Process -Force
+# Executa o comando
+Invoke-Expression $dockerCommand
 
-Write-Host "============================================"
-Write-Host "      Todos os serviços foram encerrados     "
-Write-Host "============================================"
+if ($LASTEXITCODE -eq 0) {
+    Write-Host ""
+    Write-Host "✅ SUCESSO! Todos os serviços foram parados e removidos."
+} else {
+    Write-Host "❌ ERRO! Falha ao parar o Docker Compose. Verifique se o Docker Desktop está rodando."
+}
