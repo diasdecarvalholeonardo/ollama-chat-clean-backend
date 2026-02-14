@@ -1,9 +1,11 @@
 package com.leo.ai.ollamachat.chatlog;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.context.annotation.Profile;
 
 @RestController
 @RequestMapping("/api/chatlog")
+@Profile("prod")
 public class ChatInteractionController {
 
     private final ChatInteractionService service;

@@ -3,18 +3,15 @@ package com.leo.ai.ollamachat.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.netty.http.client.HttpClient;
-import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.web.client.RestClient;
 
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class OllamaService {
 
-    private final WebClient webClient;
+    private final RestClient restClient;
 
     @Value("${ollama.model:gemma3:1b}")
     private String model;
@@ -22,28 +19,17 @@ public class OllamaService {
     public OllamaService(
             @Value("${ollama.base-url:http://localhost:11434}") String baseUrl
     ) {
-
-        HttpClient httpClient = HttpClient.create()
-                .responseTimeout(Duration.ofMinutes(5));
-
-        this.webClient = WebClient.builder()
+        this.restClient = RestClient.builder()
                 .baseUrl(baseUrl)
-                .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
     }
 
     /**
-     * 🔵 Chamada síncrona (bloqueante) ao Ollama
-     * Usada pelo ChatController (Spring MVC)
+     * 🔵 Método técnico (baixo nível)
+     * Mantido para debug, testes e uso direto
      */
     @SuppressWarnings("unchecked")
     public Map<String, Object> askOllamaSync(String prompt) {
-
-        if (prompt == null || prompt.isBlank()) {
-            Map<String, Object> error = new HashMap<>();
-            error.put("error", "⚠️ Prompt vazio.");
-            return error;
-        }
 
         Map<String, Object> body = new HashMap<>();
         body.put("model", model);
@@ -51,18 +37,40 @@ public class OllamaService {
         body.put("stream", false);
 
         try {
-            return webClient.post()
+            return restClient.post()
                     .uri("/api/generate")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(body)
+                    .body(body)
                     .retrieve()
-                    .bodyToMono(Map.class)
-                    .block(); // 🔥 bloqueio controlado e intencional
+                    .body(Map.class);
 
         } catch (Exception e) {
             Map<String, Object> error = new HashMap<>();
-            error.put("error", "❌ Erro ao chamar Ollama: " + e.getMessage());
+            error.put("error", "Erro ao chamar Ollama: " + e.getMessage());
             return error;
         }
+    }
+
+    /**
+     * 🟢 Método de domínio (USADO PELO CHAT)
+     * Retorna APENAS o texto do modelo
+     */
+    public String generate(String prompt) {
+
+        Map<String, Object> response = askOllamaSync(prompt);
+
+        if (response == null) {
+            return "Erro: resposta nula do Ollama.";
+        }
+
+        if (response.containsKey("error")) {
+            return response.get("error").toString();
+        }
+
+        Object text = response.get("response");
+
+        return text != null
+                ? text.toString()
+                : "Erro: resposta vazia do modelo.";
     }
 }

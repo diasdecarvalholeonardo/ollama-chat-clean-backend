@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.leo.ai.ollamachat.config.AutomationProperties;
+
 /**
  * Serviço responsável por disparar fluxos de automação
  * no n8n a partir do backend Spring Boot.
@@ -15,14 +17,11 @@ public class AutomationAgentTool {
 
     private final WebClient webClient;
     private final String n8nWebhookPath = "/webhook/trigger-sales";
+    private final AutomationProperties automationProperties;
 
-    public AutomationAgentTool(
-            WebClient.Builder webClientBuilder,
-            @Value("${tool.automation.n8n-base-url}") String n8nBaseUrl
-    ) {
-        this.webClient = webClientBuilder
-                .baseUrl(n8nBaseUrl)
-                .build();
+    public AutomationAgentTool(AutomationProperties automationProperties, WebClient webClient) {
+        this.webClient = webClient;
+		this.automationProperties = automationProperties;
     }
 
     public String triggerSalesWorkflow(

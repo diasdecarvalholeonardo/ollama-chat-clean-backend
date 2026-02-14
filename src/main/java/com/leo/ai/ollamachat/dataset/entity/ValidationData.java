@@ -1,25 +1,15 @@
 package com.leo.ai.ollamachat.dataset.entity;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "validation_data")
 public class ValidationData {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String question;
 
-    @Column(columnDefinition = "TEXT")
     private String context;
 
-    @Column(columnDefinition = "TEXT")
     private String expectedAnswer;
 
-    @Column
     private String category;
 
     public ValidationData() {}

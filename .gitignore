@@ -1,32 +1,38 @@
-# Maven
+# Java
 target/
-!.mvn/wrapper/maven-wrapper.jar
+*.class
+*.jar
+*.war
 
-# IntelliJ
+# Maven
+.mvn/
+.mvn/wrapper/maven-wrapper.jar
+
+# Logs
+logs/
+*.log
+
+# IDE
 .idea/
 *.iml
-
-# Eclipse
-.project
 .classpath
+.project
 .settings/
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Logs
-logs/
-*.log
+# Env
+.env
+
+# Docker volumes
+postgres-data/
+mongo-data/
 
 # Node
-frontend/node_modules/
-frontend/.next/
-frontend/dist/
+node_modules/
 
-# Docker
-*.pid
-
-# Environment variables
-.env
-.env.*
+# Build
+dist/
+build/

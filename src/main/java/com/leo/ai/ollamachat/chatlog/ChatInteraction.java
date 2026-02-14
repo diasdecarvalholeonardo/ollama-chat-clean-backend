@@ -10,7 +10,6 @@ public class ChatInteraction {
 
     @Id
     private String id;
-
     private String question;
     private String generatedResponse;
     private String modelName;

@@ -1,12 +1,16 @@
-package com.leo.ai.ollamachat.dto;
+package com.leo.ai.ollamachat.chat;
 
 public class ChatRequest {
+
+    private String sessionId;
     private String message;
 
-    public ChatRequest() {}
+    public String getSessionId() {
+        return sessionId;
+    }
 
-    public ChatRequest(String message) {
-        this.message = message;
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     public String getMessage() {

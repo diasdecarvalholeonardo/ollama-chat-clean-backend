@@ -1,44 +1,47 @@
 package com.leo.ai.ollamachat.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-/**
- * Representa uma mensagem no histórico do chat entre o usuário e o modelo.
- * Mantém compatibilidade com campos antigos e adiciona timestamp automático.
- */
 @Document(collection = "chat_messages")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ChatMessage {
 
     @Id
     private String id;
 
-    // Nome mantido igual para compatibilidade com versões anteriores
+    // JSON: "prompt"
+    @JsonProperty("prompt")
     private String userMessage;
 
+    // JSON: "response"
+    @JsonProperty("response")
     private String botResponse;
 
-    // Timestamp automático caso não seja informado
-    private LocalDateTime timestamp = LocalDateTime.now();
+    private LocalDateTime timestamp;
 
-    public ChatMessage() {}
+    // 🔑 Construtor vazio (Spring / Jackson)
+    public ChatMessage() {
+        this.id = UUID.randomUUID().toString();
+        this.timestamp = LocalDateTime.now();
+    }
 
-    public ChatMessage(String id, String userMessage, String botResponse, LocalDateTime timestamp) {
-        this.id = id;
+    public ChatMessage(String userMessage, String botResponse) {
+        this.id = UUID.randomUUID().toString();
         this.userMessage = userMessage;
         this.botResponse = botResponse;
-        this.timestamp = (timestamp != null) ? timestamp : LocalDateTime.now();
+        this.timestamp = LocalDateTime.now();
     }
 
     // Getters e Setters
+
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getUserMessage() {
@@ -62,6 +65,6 @@ public class ChatMessage {
     }
 
     public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = (timestamp != null) ? timestamp : LocalDateTime.now();
+        this.timestamp = timestamp != null ? timestamp : LocalDateTime.now();
     }
 }

@@ -1,6 +1,6 @@
 package com.leo.ai.ollamachat.controller;
 
-import com.leo.ai.ollamachat.dto.ChatRequest;
+import com.leo.ai.ollamachat.chat.ChatRequest;
 import com.leo.ai.ollamachat.service.OllamaService;
 import org.springframework.web.bind.annotation.*;
 
