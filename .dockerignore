@@ -1,0 +1,29 @@
+# Backend
+target/
+**/*.iml
+.idea/
+.project
+.classpath
+.settings/
+.mvn/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.next/
+frontend/.cache/
+
+# Git
+.git/
+.gitignore
+
+# Ambiente local
+*.log
+*.tmp
+*.swp
+*.DS_Store
+.vscode/
+
+# Docker
+docker-compose.yml
+Dockerfile
