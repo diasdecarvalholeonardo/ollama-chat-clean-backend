@@ -1,18 +1,52 @@
 
+
 services:
 
   postgres:
     image: postgres:16
-    container_name: ollama_postgres_dev
-    restart: unless-stopped
+    container_name: ollama_postgres
+    environment:
+      POSTGRES_DB: ollama_db
+      POSTGRES_USER: ollama_user
+      POSTGRES_PASSWORD: ollama_pass
     ports:
       - "5432:5432"
-    environment:
-      POSTGRES_DB: postgres_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ollama_network
+    restart: unless-stopped
+
+
+  mongo:
+    image: mongo:7
+    container_name: ollama_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - ollama_network
+    restart: unless-stopped
+
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama_server
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - ollama_network
+    restart: unless-stopped
+
+
+networks:
+  ollama_network:
+
 
 volumes:
-  pgdata:
+  postgres_data:
+  mongo_data:
+  ollama_data:

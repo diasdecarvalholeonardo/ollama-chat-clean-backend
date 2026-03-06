@@ -2,6 +2,8 @@ package com.leo.ai.ollamachat.rag.controller;
 
 import com.leo.ai.ollamachat.ingestion.entity.AgentKnowledgeBase;
 import com.leo.ai.ollamachat.rag.service.VectorSearchService;
+
+import org.springframework.ai.document.Document;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +19,7 @@ public class VectorSearchTestController {
     }
 
     @GetMapping("/debug/vector-search")
-    public List<AgentKnowledgeBase> search(
+    public List<Document> search(
             @RequestParam String q,
             @RequestParam(defaultValue = "5") int k
     ) {

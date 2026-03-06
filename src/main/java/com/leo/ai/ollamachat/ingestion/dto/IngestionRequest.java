@@ -4,35 +4,24 @@ import java.util.Map;
 
 public class IngestionRequest {
 
-    /**
-     * Tipo da fonte:
-     * PDF | WEB | TEXT | IMAGE | VIDEO (extensível)
-     */
     private String sourceType;
 
-    /**
-     * URI da fonte:
-     * - PDF   → caminho local ou volume Docker
-     * - WEB   → URL
-     * - TEXT  → identificador ou "inline"
-     */
     private String sourceUri;
 
-    /**
-     * Metadados livres:
-     * Ex:
-     * {
-     *   "sessionId": "abc123",
-     *   "language": "pt-BR",
-     *   "tags": ["contrato", "jurídico"],
-     *   "chunkSize": 800
-     * }
-     */
     private Map<String, Object> metadata;
 
-    /* =========================
-       Getters & Setters
-       ========================= */
+    public IngestionRequest() {
+    }
+
+    public IngestionRequest(
+            String sourceType,
+            String sourceUri,
+            Map<String, Object> metadata
+    ) {
+        this.sourceType = sourceType;
+        this.sourceUri = sourceUri;
+        this.metadata = metadata;
+    }
 
     public String getSourceType() {
         return sourceType;
@@ -58,21 +47,34 @@ public class IngestionRequest {
         this.metadata = metadata;
     }
 
-    /* =========================
-       Helpers (NÃO quebram nada)
-       ========================= */
-
     public boolean isPdf() {
-        return "PDF".equalsIgnoreCase(sourceType);
+        return sourceType != null &&
+               sourceType.equalsIgnoreCase("PDF");
     }
 
     public boolean isWeb() {
-        return "WEB".equalsIgnoreCase(sourceType);
+        return sourceType != null &&
+               sourceType.equalsIgnoreCase("WEB");
     }
 
     public boolean isText() {
-        return "TEXT".equalsIgnoreCase(sourceType);
+        return sourceType != null &&
+               sourceType.equalsIgnoreCase("TEXT");
+    }
+
+    public boolean hasMetadata() {
+        return metadata != null &&
+               !metadata.isEmpty();
+    }
+
+    public String getTextContent() {
+
+        if (metadata == null) {
+            return null;
+        }
+
+        Object text = metadata.get("text");
+
+        return text != null ? text.toString() : null;
     }
 }
-
-

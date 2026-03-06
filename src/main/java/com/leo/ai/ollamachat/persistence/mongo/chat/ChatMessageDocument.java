@@ -1,4 +1,4 @@
-package com.leo.ai.ollamachat.document;
+package com.leo.ai.ollamachat.persistence.mongo.chat;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

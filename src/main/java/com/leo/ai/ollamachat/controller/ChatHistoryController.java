@@ -2,7 +2,8 @@ package com.leo.ai.ollamachat.controller;
 
 import com.leo.ai.ollamachat.dto.ChatMessageRequest;
 import com.leo.ai.ollamachat.dto.ChatMessageResponse;
-import com.leo.ai.ollamachat.service.ChatHistoryService;
+import com.leo.ai.ollamachat.service.chat.ChatHistoryService.ChatHistoryService;
+
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 

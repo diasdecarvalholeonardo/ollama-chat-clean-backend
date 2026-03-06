@@ -1,4 +1,4 @@
-package com.leo.ai.ollamachat.service;
+package com.leo.ai.ollamachat.service.ollama.OllamaService;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;

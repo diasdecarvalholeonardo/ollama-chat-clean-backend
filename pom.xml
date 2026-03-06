@@ -1,55 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
+   <modelVersion>4.0.0</modelVersion>
 
-    <!-- ===================================================== -->
     <!-- SPRING BOOT PARENT -->
-    <!-- ===================================================== -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.2.0</version>
     </parent>
 
-    <!-- ===================================================== -->
     <!-- PROJECT METADATA -->
-    <!-- ===================================================== -->
     <groupId>com.leo.ai</groupId>
     <artifactId>ollama-chat-clean-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>ollama-chat-clean-backend</name>
     <packaging>jar</packaging>
 
-    <!-- ===================================================== -->
     <!-- PROPERTIES -->
-    <!-- ===================================================== -->
     <properties>
         <java.version>21</java.version>
         <spring-ai.version>1.0.0-M4</spring-ai.version>
     </properties>
 
-    <!-- ===================================================== -->
     <!-- SPRING AI BOM -->
-    <!-- ===================================================== -->
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.springframework.ai</groupId>
                 <artifactId>spring-ai-bom</artifactId>
-                <version>${spring-ai.version}</version>
+                <version>1.0.0-M5</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
-    <!-- ===================================================== -->
     <!-- DEPENDENCIES -->
-    <!-- ===================================================== -->
     <dependencies>
+
         <!-- WEB -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -61,6 +53,12 @@
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-ollama-spring-boot-starter</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-core</artifactId>
@@ -72,34 +70,12 @@
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
 
-        <!-- TEST -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-ollama-spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        
-        <!-- DEPENDÊNCIA LOCAL -->
-        <dependency>
-            <groupId>br.com.leo.ai</groupId>
-            <artifactId>Atualiza_Inteligente_RAG</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
         <!-- JPA / POSTGRES -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -118,44 +94,47 @@
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-pgvector-store-spring-boot-starter</artifactId>
         </dependency>
+
+        <!-- CONFIG PROCESSOR -->
         <dependency>
-        	<groupId>org.springframework.boot</groupId>
-        	<artifactId>spring-boot-configuration-processor</artifactId>
-        	<optional>true</optional>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
+
+        <!-- TEST -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
-    <!-- ===================================================== -->
     <!-- BUILD -->
-    <!-- ===================================================== -->
     <build>
-    <plugins>
-        <!-- Spring Boot Plugin -->
-        <plugin>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-maven-plugin</artifactId>
-            <configuration>
-                <mainClass>com.leo.ai.ollamachat.OllamaChatApplication</mainClass>
-            </configuration>
-        </plugin>
+        <plugins>
 
-        <!-- Maven Resources Plugin -->
-        <plugin>
-            <artifactId>maven-resources-plugin</artifactId>
-            <version>3.3.1</version>
-            <configuration>
-                <encoding>UTF-8</encoding>
-                <nonFilteredFileExtensions>
-                    <nonFilteredFileExtension>properties</nonFilteredFileExtension>
-                </nonFilteredFileExtensions>
-            </configuration>
-        </plugin>
-    </plugins>
-</build>
+            <!-- Spring Boot Plugin -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.leo.ai.ollamachat.OllamaChatApplication</mainClass>
+                </configuration>
+            </plugin>
 
-    <!-- ===================================================== -->
+
+        </plugins>
+    </build>
+
     <!-- REPOSITORIES -->
-    <!-- ===================================================== -->
     <repositories>
         <repository>
             <id>spring-milestones</id>
@@ -164,4 +143,3 @@
     </repositories>
 
 </project>
-

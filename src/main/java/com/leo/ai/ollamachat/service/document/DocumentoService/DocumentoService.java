@@ -1,4 +1,4 @@
-package com.leo.ai.ollamachat.service;
+package com.leo.ai.ollamachat.service.document.DocumentoService;
 
 import com.leo.ai.ollamachat.model.Documento;
 import com.leo.ai.ollamachat.repository.mongo.ChatMessageMongoRepository;

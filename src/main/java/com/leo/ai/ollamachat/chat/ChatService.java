@@ -1,9 +1,10 @@
 package com.leo.ai.ollamachat.chat;
 
-import com.leo.ai.ollamachat.document.ChatMessageDocument;
-import com.leo.ai.ollamachat.chat.ChatRequest;
-import com.leo.ai.ollamachat.service.ChatHistoryService;
-import com.leo.ai.ollamachat.service.OllamaService;
+import com.leo.ai.ollamachat.chat.dto.ChatRequest;
+import com.leo.ai.ollamachat.persistence.mongo.chat.ChatMessageDocument;
+import com.leo.ai.ollamachat.service.chat.ChatHistoryService.ChatHistoryService;
+import com.leo.ai.ollamachat.service.ollama.OllamaService.OllamaService;
+
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

@@ -1,7 +1,7 @@
-package com.leo.ai.ollamachat.service;
+package com.leo.ai.ollamachat.service.chat.ChatHistoryService;
 
-import com.leo.ai.ollamachat.document.ChatMessageDocument;
 import com.leo.ai.ollamachat.dto.ChatMessageRequest;
+import com.leo.ai.ollamachat.persistence.mongo.chat.ChatMessageDocument;
 import com.leo.ai.ollamachat.repository.mongo.ChatMessageMongoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

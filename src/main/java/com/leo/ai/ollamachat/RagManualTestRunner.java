@@ -23,7 +23,8 @@ public class RagManualTestRunner implements CommandLineRunner {
 
         RagResponse response = ragService.ask(
                 "Qual é o objetivo principal deste documento?",
-                5
+                5,
+                false
         );
 
         System.out.println("🧠 RESPOSTA:");

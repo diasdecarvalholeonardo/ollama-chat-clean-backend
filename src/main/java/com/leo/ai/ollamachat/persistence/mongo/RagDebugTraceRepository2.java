@@ -9,7 +9,7 @@ import com.leo.ai.ollamachat.persistence.mongo.debug.RagDebugTraceDocument;
 import java.util.List;
 import java.util.Optional;
 
-public interface RagDebugTraceRepository
+public interface RagDebugTraceRepository2
         extends MongoRepository<RagDebugTraceDocument, String> {
 
     Optional<RagDebugTraceDocument> findTopByOrderByTimestampDesc();

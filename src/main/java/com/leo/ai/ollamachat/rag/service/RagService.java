@@ -1,92 +1,81 @@
 package com.leo.ai.ollamachat.rag.service;
 
-import com.leo.ai.ollamachat.ingestion.entity.AgentKnowledgeBase;
-import com.leo.ai.ollamachat.persistence.mongo.RagDebugTraceDocument;
-import com.leo.ai.ollamachat.persistence.mongo.RagDebugTraceRepository;
-import com.leo.ai.ollamachat.rag.debug.RagDebugTrace;
-import com.leo.ai.ollamachat.rag.model.RagRetrievedChunk;
+import com.leo.ai.ollamachat.domain.document.DocumentChunk;
+import com.leo.ai.ollamachat.domain.document.DocumentChunkRepository;
+import com.leo.ai.ollamachat.embedding.EmbeddingService;
 
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.document.Document;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class RagService {
 
-    private final VectorSearchService vectorSearchService;
+    private final EmbeddingService embeddingService;
+    private final DocumentChunkRepository repository;
     private final ChatClient chatClient;
-    private final RagDebugTraceRepository debugRepository;
 
-    public RagService(VectorSearchService vectorSearchService,
-                      ChatClient chatClient,
-                      RagDebugTraceRepository debugRepository) {
-        this.vectorSearchService = vectorSearchService;
-        this.chatClient = chatClient;
-        this.debugRepository = debugRepository;
+    public RagService(
+            EmbeddingService embeddingService,
+            DocumentChunkRepository repository,
+            ChatClient.Builder chatClientBuilder
+    ) {
+        this.embeddingService = embeddingService;
+        this.repository = repository;
+        this.chatClient = chatClientBuilder.build();
     }
 
-    // 🔒 Método consagrado — NÃO MUDA
-    public RagResponse ask(String question, int topK) {
-        return ask(question, topK, false);
-    }
-
-    // 🧠 Método com debug opcional
     public RagResponse ask(String question, int topK, boolean debug) {
 
-        List<AgentKnowledgeBase> contexts =
-                vectorSearchService.search(question, topK);
+        // 1️⃣ Gerar embedding da pergunta
+        float[] queryEmbedding = embeddingService.generateEmbedding(question);
 
-        String contextBlock = contexts.stream()
-                .map(AgentKnowledgeBase::getContent)
-                .collect(Collectors.joining("\n---\n"));
+        // 2️⃣ Buscar chunks similares via pgvector
+        List<DocumentChunk> chunks =
+                repository.findTopSimilar(queryEmbedding, topK);
 
-        String prompt = """
-                Você é um assistente técnico.
-                Responda SOMENTE com base no contexto abaixo.
-                Se não souber, diga que não encontrou a informação.
+        // 3️⃣ Converter para Document (Spring AI)
+        List<Document> documents =
+                chunks.stream()
+                        .map(chunk -> new Document(chunk.getContent()))
+                        .collect(Collectors.toList());
 
-                CONTEXTO:
+        // 4️⃣ Montar contexto
+        String context =
+                documents.stream()
+                        .map(Document::getContent)
+                        .collect(Collectors.joining("\n\n"));
+
+        // 5️⃣ Montar prompt
+        String prompt =
+                """
+                Use the context below to answer the question.
+
+                Context:
                 %s
 
-                PERGUNTA:
+                Question:
                 %s
-                """.formatted(contextBlock, question);
+                """.formatted(context, question);
 
-        String answer = chatClient
-                .prompt()
+        // 6️⃣ Chamar LLM
+        String answer = chatClient.prompt()
                 .user(prompt)
                 .call()
                 .content();
 
-        RagDebugTrace debugTrace = null;
-
+        // 7️⃣ Debug
         if (debug) {
-            RagDebugTraceDocument doc =
-                    new RagDebugTraceDocument(
-                            null,
-                            Instant.now(),
-                            question,
-                            topK,
-                            "nomic-embed-text",
-                            "llama3.1",
-                            contexts.stream()
-                                    .map(RagRetrievedChunk::from)
-                                    .toList()
-                    );
-
-            RagDebugTraceDocument saved = debugRepository.save(doc);
-
-            debugTrace = new RagDebugTrace(
-                    saved.timestamp(),
-                    saved.question(),
-                    saved.topK(),
-                    saved.retrievedChunks()
-            );
+            System.out.println("\n===== DEBUG RAG =====");
+            System.out.println("Question: " + question);
+            System.out.println("TopK: " + topK);
+            System.out.println("Chunks found: " + chunks.size());
+            System.out.println("=====================\n");
         }
 
-        return new RagResponse(answer, contexts, debugTrace);
+        return new RagResponse(answer, documents);
     }
 }

@@ -1,4 +1,4 @@
-package com.leo.ai.ollamachat.persistence.mongo;
+package com.leo.ai.ollamachat.persistence.mongo.debug;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

@@ -1,9 +1,10 @@
 package com.leo.ai.ollamachat.chat;
 
-import com.leo.ai.ollamachat.chat.ChatRequest;
-import com.leo.ai.ollamachat.chat.ChatResponse;
-import com.leo.ai.ollamachat.chat.ChatService;
-import com.leo.ai.ollamachat.document.ChatMessageDocument;
+import com.leo.ai.ollamachat.rag.service.RagChatService;
+import com.leo.ai.ollamachat.chat.dto.ChatRequest;
+import com.leo.ai.ollamachat.chat.dto.ChatResponse;
+import com.leo.ai.ollamachat.persistence.mongo.chat.ChatMessageDocument;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.context.annotation.Profile;
 
@@ -13,10 +14,10 @@ import org.springframework.context.annotation.Profile;
 @Profile("prod")
 public class ChatController {
 
-    private final ChatService chatService;
+    private final RagChatService ragChatService;
 
-    public ChatController(ChatService chatService) {
-        this.chatService = chatService;
+    public ChatController(RagChatService ragChatService) {
+        this.ragChatService = ragChatService;
     }
 
     /**
@@ -40,25 +41,18 @@ public class ChatController {
         );
     }
 
-    /**
-     * 🤖 Endpoint principal — Chat completo
-     */
+
     @PostMapping
     public ChatResponse chat(@RequestBody ChatRequest request) {
 
         if (request.getMessage() == null || request.getMessage().isBlank()) {
-            return new ChatResponse("⚠️ A mensagem não pode estar vazia.");
+            return new ChatResponse("⚠️ A mensagem não pode estar vazia.", null);
         }
 
         try {
-            var savedInteraction = chatService.chat(request);
-
-            return new ChatResponse(
-                    savedInteraction.getResponse()
-            );
-
+            return ragChatService.chat(request);
         } catch (Exception e) {
-            return new ChatResponse("❌ Erro: " + e.getMessage());
+            return new ChatResponse("❌ Erro: " + e.getMessage(), null);
         }
     }
 

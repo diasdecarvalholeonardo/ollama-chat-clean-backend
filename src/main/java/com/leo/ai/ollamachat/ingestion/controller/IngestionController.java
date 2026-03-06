@@ -28,8 +28,7 @@ public class IngestionController {
 
         return new IngestionResponse(
                 "OK",
-                "Ingestion request accepted"
+                "Document ingested successfully"
         );
     }
 }
-
