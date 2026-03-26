@@ -2,10 +2,9 @@ package com.leo.ai.ollamachat.rag.service;
 
 import com.leo.ai.ollamachat.chat.dto.ChatRequest;
 import com.leo.ai.ollamachat.chat.dto.ChatResponse;
+import com.leo.ai.ollamachat.domain.document.DocumentChunk;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.document.Document;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,14 +24,17 @@ public class RagChatService {
 
     public ChatResponse chat(ChatRequest request) {
 
-        List<Document> documents =
+        // 🔎 1️⃣ buscar chunks relevantes
+        List<DocumentChunk> chunks =
                 vectorSearchService.search(request.getMessage(), 5);
 
+        // 📚 2️⃣ montar contexto para o LLM
         String context =
-                documents.stream()
-                        .map(Document::getContent)
+                chunks.stream()
+                        .map(DocumentChunk::getContent)
                         .collect(Collectors.joining("\n\n"));
 
+        // 🧠 3️⃣ montar prompt RAG
         String prompt =
                 """
                 Use the context below to answer the question.
@@ -44,17 +46,20 @@ public class RagChatService {
                 %s
                 """.formatted(context, request.getMessage());
 
+        // 🤖 4️⃣ chamar o LLM
         String answer =
                 chatClient.prompt()
                         .user(prompt)
                         .call()
                         .content();
 
+        // 📄 5️⃣ extrair fontes
         List<String> sources =
-                documents.stream()
-                        .map(d -> d.getMetadata().toString())
+                chunks.stream()
+                        .map(chunk -> "chunk_id=" + chunk.getId())
                         .collect(Collectors.toList());
 
+        // 📦 6️⃣ resposta final
         return new ChatResponse(answer, sources);
     }
 }

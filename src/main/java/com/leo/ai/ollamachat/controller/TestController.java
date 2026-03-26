@@ -13,7 +13,7 @@ public class TestController {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        String url = "http://ollama_server:11434/api/tags";
+        String url = "http://localhost:11434/api/tags";
 
         return restTemplate.getForObject(url, Map.class);
     }

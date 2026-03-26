@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import com.leo.ai.ollamachat.domain.document.DocumentChunk;
 import com.leo.ai.ollamachat.domain.document.DocumentChunkRepository;
-import com.leo.ai.ollamachat.embedding.EmbeddingService;
+import com.leo.ai.ollamachat.embedding.service.EmbeddingService;
 
 @Service
 public class RetrievalService {

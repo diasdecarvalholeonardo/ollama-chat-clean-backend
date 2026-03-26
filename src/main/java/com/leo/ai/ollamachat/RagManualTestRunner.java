@@ -28,10 +28,10 @@ public class RagManualTestRunner implements CommandLineRunner {
         );
 
         System.out.println("🧠 RESPOSTA:");
-        System.out.println(response.answer());
+        System.out.println(response.getAnswer());
 
         System.out.println("\n📚 FONTES UTILIZADAS:");
-        response.sources().forEach(source ->
+        response.getSources().forEach(source ->
                 System.out.println("- " + source.getId())
         );
 

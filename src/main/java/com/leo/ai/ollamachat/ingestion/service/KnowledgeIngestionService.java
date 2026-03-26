@@ -1,6 +1,6 @@
 package com.leo.ai.ollamachat.ingestion.service;
 
-import com.leo.ai.ollamachat.embedding.EmbeddingService;
+import com.leo.ai.ollamachat.embedding.service.EmbeddingService;
 import com.leo.ai.ollamachat.ingestion.dto.IngestionRequest;
 import com.leo.ai.ollamachat.knowledge.entity.KnowledgeDocument;
 import com.leo.ai.ollamachat.knowledge.repository.KnowledgeDocumentRepository;
@@ -9,7 +9,6 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Service;
-
 import java.io.File;
 import java.util.*;
 
@@ -81,11 +80,11 @@ public class KnowledgeIngestionService {
 
             try {
 
-                File file =
-                        new File(request.getSourceUri());
+            	File file =
+            	        new File(request.getSourceUri());
 
-                PDDocument pdf =
-                        PDDocument.load(file);
+            	PDDocument pdf =
+            	        org.apache.pdfbox.Loader.loadPDF(file);
 
                 PDFTextStripper stripper =
                         new PDFTextStripper();
