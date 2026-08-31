@@ -36,3 +36,12 @@ node_modules/
 # Build
 dist/
 build/
+/.metadata/
+# Uploads
+uploads/
+
+# Frontend local copy
+frontend/
+
+# Eclipse / STS
+.metadata/
